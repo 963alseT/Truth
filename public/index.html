@@ -1,0 +1,71 @@
+<!--index.html file-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Class 9 ChatRoom</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="logo">Class 9 ChatRoom</h1>
+        <form class="form" id="form">
+            <div class="messageArea" id="messageArea"></div>
+            <input class="input" type="text" placeholder="Name" id="myname" autocomplete="off">
+            <input class="input" type="text" placeholder="Message" id="message" autocomplete="off">
+            <button>
+                <link rel="stylesheet" href="test5.css">
+                <div class="svg-wrapper-1">
+                  <div class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                      <path fill="none" d="M0 0h24v24H0z"></path>
+                      <path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
+                    </svg>
+                  </div>
+                </div>
+                <span>Send</span>
+              </button>
+            
+        </form>
+        
+        
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io();
+
+        let form = document.getElementById('form');
+        let myname = document.getElementById('myname');
+        let message = document.getElementById('message');
+        let messageArea = document.getElementById('messageArea');
+        
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (message.value) {
+                socket.emit('send name', myname.value);
+                socket.emit('send message', message.value);
+                message.value = '';
+            }
+        });
+
+        socket.on('send name', (username) => {
+            let name = document.createElement('p');
+            name.classList.add('message');
+            name.innerHTML = `<span class="username">${username}:</span>`;
+            messageArea.appendChild(name);
+        });
+
+        socket.on('send message', (chat) => {
+            let chatContent = document.createElement('p');
+            chatContent.classList.add('message');
+            chatContent.textContent = chat;
+            messageArea.appendChild(chatContent);
+        });
+    </script>
+</body>
+
+</html>
